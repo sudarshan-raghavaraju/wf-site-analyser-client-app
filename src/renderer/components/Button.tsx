@@ -1,6 +1,6 @@
 import React from 'react';
 
-type ButtonVariant = 'primary' | 'secondary' | 'ghost';
+type ButtonVariant = 'primary' | 'primary-gradient' | 'secondary' | 'ghost';
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: ButtonVariant;
@@ -9,11 +9,13 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
 }
 
 const variantClasses: Record<ButtonVariant, string> = {
-  primary:
-    'bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500 border border-transparent',
+  primary: 'bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500 border border-transparent',
+  'primary-gradient':
+    'bg-gradient-to-br from-primary-dark to-primary text-white hover:opacity-90 focus:ring-primary border border-transparent',
   secondary:
     'border border-blue-600 text-blue-600 bg-transparent hover:bg-blue-50 focus:ring-blue-500',
-  ghost: 'text-blue-600 bg-transparent hover:bg-blue-50 focus:ring-blue-500 border border-transparent',
+  ghost:
+    'text-blue-600 bg-transparent hover:bg-blue-50 focus:ring-blue-500 border border-transparent',
 };
 
 export function Button({

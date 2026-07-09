@@ -18,6 +18,7 @@ export interface Tokens {
     neutral: Record<string, string>;
     success: string;
     warning: string;
+    'warning-dark': string;
     error: string;
   };
   typography: {
@@ -28,6 +29,8 @@ export interface Tokens {
     body: TypographyToken;
     caption: TypographyToken;
     small: TypographyToken;
+    xxs: TypographyToken;
+    display: TypographyToken;
   };
   spacing: Record<number, string>;
   borderRadius: {
@@ -61,6 +64,7 @@ export const tokens: Tokens = {
     },
     success: '#10B981',
     warning: '#F59E0B',
+    'warning-dark': '#92400E',
     error: '#BA1A1A',
   },
   typography: {
@@ -71,6 +75,8 @@ export const tokens: Tokens = {
     body: { fontSize: '14px', lineHeight: '1.5', fontWeight: 400 },
     caption: { fontSize: '12px', lineHeight: '1.4', fontWeight: 700 },
     small: { fontSize: '12px', lineHeight: '1.4', fontWeight: 400 },
+    xxs: { fontSize: '10px', lineHeight: '1.25', fontWeight: 400 },
+    display: { fontSize: '30px', lineHeight: '1.25', fontWeight: 400 },
   },
   spacing: {
     4: '4px',
@@ -113,6 +119,7 @@ export const darkTokens: Pick<Tokens, 'colors'> = {
     },
     success: '#34D399',
     warning: '#FBBF24',
+    'warning-dark': '#92400E',
     error: '#F87171',
   },
 };

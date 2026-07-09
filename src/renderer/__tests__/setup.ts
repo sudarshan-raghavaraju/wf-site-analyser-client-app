@@ -1,5 +1,7 @@
 import '@testing-library/jest-dom';
-import { vi } from 'vitest';
+import { vi, afterAll, afterEach, beforeAll } from 'vitest';
+
+import { mockServer } from '@main/mocks/server';
 
 // ---------------------------------------------------------------------------
 // Mock the Electron contextBridge API (window.api)
@@ -9,7 +11,8 @@ const mockElectronAPI = {
   getAppVersion: vi.fn().mockResolvedValue('2.4.0'),
   checkForUpdates: vi.fn().mockResolvedValue({ updateAvailable: false }),
   installUpdate: vi.fn().mockResolvedValue(undefined),
-  onUpdateStatus: vi.fn(),
+  onUpdateStatus: vi.fn().mockReturnValue(() => {}),
+  onUpdateProgress: vi.fn().mockReturnValue(() => {}),
 
   // Session / storage
   getSessionId: vi.fn().mockResolvedValue('test-uuid-1234'),
@@ -23,10 +26,14 @@ const mockElectronAPI = {
   'safeStorage:delete': vi.fn().mockResolvedValue(undefined),
 
   // IMS Authentication
-  'auth:openOAuthWindow': vi.fn().mockResolvedValue({ accessToken: 'mock-token', userId: 'user-123' }),
+  'auth:openOAuthWindow': vi
+    .fn()
+    .mockResolvedValue({ accessToken: 'mock-token', userId: 'user-123' }),
   'auth:signOut': vi.fn().mockResolvedValue(undefined),
   'auth:switchAccount': vi.fn().mockResolvedValue(undefined),
-  'auth:getTokenClaims': vi.fn().mockResolvedValue({ name: 'Test User', email: 'test@example.com', org: 'Test Org' }),
+  'auth:getTokenClaims': vi
+    .fn()
+    .mockResolvedValue({ name: 'Test User', email: 'test@example.com', org: 'Test Org' }),
 
   // Analysis
   'analysis:start': vi.fn().mockResolvedValue({ analysisId: 'analysis-123' }),
@@ -34,12 +41,18 @@ const mockElectronAPI = {
   'analysis:pause': vi.fn().mockResolvedValue(undefined),
   'analysis:resume': vi.fn().mockResolvedValue(undefined),
   'analysis:getStatus': vi.fn().mockResolvedValue({ status: 'running', progress: 68 }),
-  'analysis:saveAutoSave': vi.fn().mockResolvedValue(undefined),
+  'analysis:saveAutoSave': vi.fn().mockResolvedValue({
+    path: '/mock/userData/autosave.json',
+    savedAt: '2026-06-01T00:00:00.000Z',
+  }),
+  'analysis:loadAutoSave': vi.fn().mockResolvedValue(null),
 
   // Data / migration
   'data:migrateGuestToAuth': vi.fn().mockResolvedValue({ success: true }),
   'data:discardGuestData': vi.fn().mockResolvedValue(undefined),
-  'data:getStorageUsage': vi.fn().mockResolvedValue({ usedBytes: 2468987289, totalBytes: 10737418240 }),
+  'data:getStorageUsage': vi
+    .fn()
+    .mockResolvedValue({ usedBytes: 2468987289, totalBytes: 10737418240 }),
   'data:clearOldData': vi.fn().mockResolvedValue(undefined),
 
   // File system
@@ -69,6 +82,15 @@ vi.mock('react-router-dom', async () => {
     useNavigate: vi.fn(() => vi.fn()),
   };
 });
+
+// ---------------------------------------------------------------------------
+// MSW — intercepts fetch() calls from the main-process IPC handlers in tests
+// that swap window.api.checkForUpdates for a real fetch implementation.
+// Tests that keep the vi.fn() mock are unaffected.
+// ---------------------------------------------------------------------------
+beforeAll(() => mockServer.listen({ onUnhandledRequest: 'warn' }));
+afterEach(() => mockServer.resetHandlers());
+afterAll(() => mockServer.close());
 
 // ---------------------------------------------------------------------------
 // Reset all mocks between tests

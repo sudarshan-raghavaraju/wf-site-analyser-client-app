@@ -58,6 +58,7 @@ export default {
         },
         warning: {
           DEFAULT: tokens.colors.warning,
+          dark: tokens.colors['warning-dark'],
           light: '#F97316',
           surface: '#FFF7ED',
         },
@@ -143,6 +144,11 @@ export default {
         label: ['12px', { lineHeight: '1.4', fontWeight: '700', letterSpacing: '0.05em' }],
         'nav-title': ['20px', { lineHeight: '1', fontWeight: '900' }],
         'body-lg': ['18px', { lineHeight: '1.6', fontWeight: '400' }],
+        xxs: [tokens.typography.xxs.fontSize, { lineHeight: tokens.typography.xxs.lineHeight }],
+        display: [
+          tokens.typography.display.fontSize,
+          { lineHeight: tokens.typography.display.lineHeight },
+        ],
       },
       spacing: {
         4.5: '18px',

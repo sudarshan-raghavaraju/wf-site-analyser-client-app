@@ -10,6 +10,7 @@ Apply these accessibility patterns **by default** — they are not optional.
 ## Always do
 
 ### Keyboard
+
 - Every interactive element must be reachable via `Tab` and operable with `Enter`/`Space`.
 - Use semantic HTML: `<button>` for buttons, `<a>` for links, `<input>` for inputs.
 - Use Radix UI primitives (already in the project) for complex widgets — they handle focus and ARIA correctly:
@@ -21,6 +22,7 @@ Apply these accessibility patterns **by default** — they are not optional.
 - Trap focus inside modals; restore focus to the trigger when closed (Radix handles this automatically).
 
 ### Labels & landmarks
+
 - Every form input needs a linked `<label>` (`htmlFor` matching input `id`), or an associated `aria-label` / `aria-labelledby`.
 - Icon-only buttons need `aria-label` (see how `Modal.tsx` labels the close button `aria-label="Close"`).
 - The SVG icon **inside** an icon-only button needs `aria-hidden="true"` so the screen reader
@@ -28,6 +30,7 @@ Apply these accessibility patterns **by default** — they are not optional.
 - Use semantic landmarks: `<main>`, `<nav>`, `<header>`, `<footer>` — not generic `<div>`s.
 
 ### When NOT to add `aria-label`
+
 - **Don't add `aria-label` to elements whose visible text already conveys their meaning.**
   Screen readers will announce the text content; an `aria-label` that duplicates (or worse,
   contradicts) it produces noise and confusion.
@@ -39,6 +42,7 @@ Apply these accessibility patterns **by default** — they are not optional.
     prefer `aria-describedby` pointing to nearby text over a duplicated `aria-label`.
 
 ### Live regions (status announcements)
+
 - Use `aria-live="polite"` (or `role="status"`) for non-urgent updates the user should know about —
   scan progress, save confirmations, info toasts. See `Toast.tsx` and `Input.tsx` for the
   project's canonical implementations.
@@ -49,12 +53,14 @@ Apply these accessibility patterns **by default** — they are not optional.
   the user having to look at the spinner.
 
 ### Visual
+
 - Color contrast: **4.5:1** minimum for body text, **3:1** for large text and UI components.
 - Never convey information by color alone — always pair with icon or text.
 - Visible focus ring on all interactive elements. Use Tailwind's `focus:ring-2 focus:ring-blue-500` pattern (see `Modal.tsx`).
 - Honor `prefers-reduced-motion` for any animation — use Tailwind's `motion-safe:` / `motion-reduce:` variants.
 
 ### Images & media
+
 - All `<img>` need `alt`:
   - Descriptive `alt` for informational images
   - Empty `alt=""` for purely decorative images

@@ -1,7 +1,7 @@
 ---
 name: tdd-story
 description: Implement a user story using TDD — reads the story file, finds its test file, implements the component, and runs vitest until all tests are green.
-argument-hint: "<story-id>  e.g. SA-601"
+argument-hint: '<story-id>  e.g. SA-601'
 allowed-tools: Read, Write, Edit, Glob, Grep, Bash
 ---
 
@@ -53,6 +53,7 @@ You are implementing the user story **$ARGUMENTS** using Test-Driven Development
 ## PHASE 3 — TDD LOOP
 
 6. Run the test file:
+
    ```
    npx vitest run <test-file-path> --reporter=verbose
    ```

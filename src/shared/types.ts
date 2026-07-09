@@ -26,6 +26,7 @@ export const IPC_CHANNELS = {
   ANALYSIS_RESUME: 'analysis:resume',
   ANALYSIS_GET_STATUS: 'analysis:getStatus',
   ANALYSIS_SAVE_AUTO: 'analysis:saveAutoSave',
+  ANALYSIS_LOAD_AUTO_SAVE: 'analysis:loadAutoSave',
   DATA_MIGRATE: 'data:migrateGuestToAuth',
   DATA_DISCARD_GUEST: 'data:discardGuestData',
   DATA_GET_STORAGE: 'data:getStorageUsage',
@@ -37,17 +38,50 @@ export const IPC_CHANNELS = {
   RAG_QUERY: 'rag:query',
   GET_ENV: 'app:getEnv',
   PING: 'app:ping',
+  /** Main → renderer push: lifecycle status string
+   * ('downloading' | 'installing' | 'restarting' | 'error' | 'ready'). */
+  UPDATE_STATUS: 'update-status',
+  /** Main → renderer push: download progress as an integer 0–100. */
+  UPDATE_PROGRESS: 'update-progress',
 } as const;
 
 // ---------------------------------------------------------------------------
 // IPC Response types
 // ---------------------------------------------------------------------------
+export type ReleaseNoteCategory = 'feature' | 'security' | 'ui' | 'bugfix';
+
+export interface ReleaseNote {
+  title: string;
+  description: string;
+  category: ReleaseNoteCategory;
+  icon?: string;
+}
+
 export interface UpdateCheckResult {
   updateAvailable: boolean;
-  version?: string;
-  releaseNotes?: string;
   /** Whether the update is mandatory and must be installed before the app can be used. */
   mandatory?: boolean;
+  /** Latest available version per the update server (e.g. "2.5.2"). */
+  latestVersion?: string;
+  /** Minimum supported version — below this, an update is mandatory. */
+  minimumVersion?: string;
+  /** Current running version as known by the server (echoed back from the request). */
+  currentVersion?: string;
+  /** Where the update artifact can be downloaded. */
+  downloadUrl?: string;
+  /** Expected SHA-256 hex digest for the downloaded update artifact. */
+  sha256?: string;
+  /** Approximate seconds the install/restart cycle will take, surfaced in the modal footer. */
+  estimatedUpdateSeconds?: number;
+  /** ISO-8601 publish timestamp of the release. */
+  publishedAt?: string;
+  /** Structured release notes; rendered inside the Force Update modal. */
+  releaseNotes?: ReleaseNote[];
+  /**
+   * Legacy alias for `latestVersion`. Older test fixtures and mocks still use this; new
+   * callers should prefer `latestVersion`. Kept optional so both shapes type-check.
+   */
+  version?: string;
 }
 
 export interface OAuthResult {
@@ -92,6 +126,26 @@ export interface AnalysisStatus {
   /** Pages discovered and analysed so far in this run. */
   pages?: PageResult[];
 }
+export interface CachedUpdateManifest {
+  result: UpdateCheckResult;
+  cachedAt: string;
+}
+
+export interface AutoSavePayload {
+  schemaVersion: 1;
+  /** ISO-8601 timestamp set by the main process when the file is written. */
+  savedAt: string;
+  /** Optional id when an analysis is in flight. Absent for plain "before-restart" snapshots. */
+  analysisId?: string;
+  /** Opaque renderer-owned state. The analysis-persistence story will give this a real shape. */
+  state?: unknown;
+}
+
+/** Returned by `analysis:saveAutoSave` so the renderer can verify the write landed. */
+export interface AutoSaveResult {
+  path: string;
+  savedAt: string;
+}
 
 export interface MigrationResult {
   success: boolean;
@@ -135,6 +189,8 @@ export interface AppEnv {
   NODE_ENV: string;
   APP_STAGE: string;
   API_BASE_URL: string;
+  /** Update-check endpoint (SA-202). Falls back to a dev default when unset. */
+  UPDATE_SERVER_URL: string;
   [key: string]: string;
 }
 
@@ -151,6 +207,11 @@ export interface ElectronAPI {
    * Returns a cleanup function that removes the listener.
    */
   onUpdateStatus: (callback: (status: string) => void) => () => void;
+  /**
+   * Subscribe to download-progress events from the main process.
+   * Callback receives a percent integer 0–100. Returns a cleanup function.
+   */
+  onUpdateProgress: (callback: (percent: number) => void) => () => void;
   getSessionId: () => Promise<string>;
 
   // Key-value store
@@ -175,8 +236,15 @@ export interface ElectronAPI {
   'analysis:pause': (id: string) => Promise<void>;
   'analysis:resume': (id: string) => Promise<void>;
   'analysis:getStatus': (id: string) => Promise<AnalysisStatus>;
-  /** id is optional to support auto-save from contexts that may not have a persisted id yet. */
-  'analysis:saveAutoSave': (id?: string) => Promise<void>;
+  /**
+   * Persist an autosave payload to disk. Called before a force-update restart and
+   * by future analysis-feature autosave ticks. Payload is optional — when absent
+   * the handler writes a minimal {schemaVersion, savedAt} marker.
+   */
+  'analysis:saveAutoSave': (payload?: AutoSavePayload) => Promise<AutoSaveResult>;
+  /** Read the autosave file if present. Returns null when no autosave exists
+   * or the file is unreadable. */
+  'analysis:loadAutoSave': () => Promise<AutoSavePayload | null>;
 
   // Data / migration
   'data:migrateGuestToAuth': (userId: string) => Promise<MigrationResult>;

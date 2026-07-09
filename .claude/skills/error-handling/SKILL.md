@@ -11,6 +11,7 @@ Errors are inevitable — what matters is **what the user sees**, **what gets lo
 ## Always do
 
 ### Error boundaries (React)
+
 - Wrap **each feature area** in an `ErrorBoundary` (e.g. one around the Analysis screen, one
   around the Chat panel) — not every individual component.
 - Boundary rendered fallback should be **useful**: an apology message, a "Retry" button
@@ -19,20 +20,23 @@ Errors are inevitable — what matters is **what the user sees**, **what gets lo
   rendering errors. Async failures must be handled explicitly (see below).
 
 ### IPC calls (`window.api.<method>`)
+
 - **Every** `window.api.<method>()` call must be wrapped in `try/catch`. IPC can fail for
   many reasons: handler threw, channel not registered, main process crashed, validation rejected.
 - On failure:
   - Show a user-facing message via `Toast` (the project's existing component) — not a console log
-  - Use friendly language: *"Couldn't save your changes. Please try again."*, not the raw error
+  - Use friendly language: _"Couldn't save your changes. Please try again."_, not the raw error
   - Log the technical detail via the centralized logger (PII-stripped — see below)
   - If recoverable, offer a Retry action
 
 ### Async operations in components
+
 - For `useEffect` / event handler async work, use the same try/catch pattern.
 - Track state explicitly: `loading`, `error`, `data` — don't conflate them. A loading spinner
   and an error message should never appear simultaneously.
 
 ### Surfacing errors to the user — when to use what
+
 - **Toast** — for transient, non-blocking errors the user can recover from
   (network failure, save failed, IPC timeout). User can keep using the app.
 - **Inline error text** — for form validation errors next to the input. Pair with
@@ -42,6 +46,7 @@ Errors are inevitable — what matters is **what the user sees**, **what gets lo
 - **ErrorBoundary fallback** — only for unexpected render-time crashes. Surface a way to recover.
 
 ### Logging
+
 - Use the project's centralized logger (do not sprinkle `console.error` everywhere).
 - **Never log:** tokens, passwords, encrypted blobs, full request/response bodies, PII (emails,
   names, IP addresses).
@@ -64,6 +69,7 @@ Errors are inevitable — what matters is **what the user sees**, **what gets lo
 ## Project-specific patterns
 
 ### Canonical IPC try/catch
+
 ```ts
 async function startAnalysis(config: AnalysisConfig) {
   try {
@@ -88,7 +94,10 @@ logger, surface to the user if recoverable, never swallow.
 ```ts
 // ❌ WRONG — silent swallow.
 useEffect(() => {
-  window.api.getAppVersion().then(setVersion).catch(() => {});
+  window.api
+    .getAppVersion()
+    .then(setVersion)
+    .catch(() => {});
 }, []);
 
 // ❌ STILL WRONG — bare console.error in production code.
@@ -113,11 +122,13 @@ useEffect(() => {
 decision based on whether the failure affects the user's workflow.
 
 ### ErrorBoundary placement
+
 - One per top-level feature: Analysis, Results, Chat, Settings, Auth.
 - Place them in the feature's root layout/screen component, not at App.tsx (a single root
   boundary means one feature crash kills the entire app).
 
 ### Validation errors
+
 - Zod schemas already in the project — use `safeParse` over `parse`:
   ```ts
   const result = schema.safeParse(input);

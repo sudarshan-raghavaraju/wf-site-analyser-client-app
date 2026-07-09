@@ -116,7 +116,7 @@ Environment-specific variables live in `.env.*` files at the project root:
 - `.env.staging` – staging builds
 - `.env.production` – production builds
 
-Key variables: `NODE_ENV`, `APP_STAGE`, `API_BASE_URL`.
+Key variables: `NODE_ENV`, `APP_STAGE`, `API_BASE_URL`, `UPDATE_SERVER_URL`.
 
 ## Git hooks (Husky)
 
@@ -135,12 +135,12 @@ Key variables: `NODE_ENV`, `APP_STAGE`, `API_BASE_URL`.
 
 ### Hooks
 
-| Hook             | Script                      | When it runs                                                                                                      |
-| ---------------- | --------------------------- | ----------------------------------------------------------------------------------------------------------------- |
-| Token governance | `hooks/token-governance.sh` | Staged files match `tokens/`, `tailwind.config`, `src/renderer/styles/`, `theme.ts`, or `style-dictionary.config` |
-| Fallow audit     | `hooks/fallow-audit.sh`     | Staged files match `src/`, `tokens/`, `package.json`, or TypeScript/Vite/ESLint/Tailwind config                   |
+| Hook             | Script                      | When it runs                                                                                                                       |
+| ---------------- | --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| Token governance | `hooks/token-governance.sh` | Staged files match `tokens/`, `tailwind.config`, `src/renderer/styles/`, `theme.ts`, or `style-dictionary.config`                  |
+| Fallow audit     | `hooks/fallow-audit.sh`     | Staged files match `src/`, `tokens/`, `package.json`, or TypeScript/Vite/ESLint/Tailwind config, and `fallow` is installed locally |
 
-Fallow uses `gate=new-only` (default): only issues **introduced** by your changeset block the commit. The comparison base is `origin/develop`, matching [`.github/workflows/claude-pr-review.yml`](.github/workflows/claude-pr-review.yml).
+The local Fallow hook is optional and does not download packages during commit. If `node_modules/.bin/fallow` is present, it audits against `origin/develop`; otherwise it skips locally. The PR workflow still runs Fallow in CI, matching [`.github/workflows/claude-pr-review.yml`](.github/workflows/claude-pr-review.yml).
 
 ### Enable or disable hooks
 
@@ -192,7 +192,10 @@ Use the development workflow below to work in a fork first, then promote changes
 2. Sync the `develop` branch on your fork with upstream `develop` (keep it current throughout the project).
 3. Add the `CLAUDE_CODE_OAUTH_TOKEN` secret to your **forked** repository (Settings → Secrets and variables → Actions), using a token from `claude setup-token`.
 
-#### Feature development (forked repository)
+| Approach              | Best for                                  | How                                                                                           |
+| --------------------- | ----------------------------------------- | --------------------------------------------------------------------------------------------- |
+| **Repository secret** | Small team, shared subscription           | One admin sets `CLAUDE_CODE_OAUTH_TOKEN` under **Settings → Secrets and variables → Actions** |
+| **Fork secret**       | Contributors working from a personal fork | Set `CLAUDE_CODE_OAUTH_TOKEN` on the **fork** repo (see fork workflow below)                  |
 
 1. Create a feature branch from `develop` on your fork.
 2. Implement and commit your changes (conventional commit messages; Husky runs fallow audit and token checks locally).
@@ -208,4 +211,54 @@ When the feature is ready for upstream integration:
 1. On the **upstream** repository, create a feature branch from `develop` (same branch name as on your fork, if possible).
 2. Push the commits from your fork’s feature branch to that upstream feature branch.
 
-Contributors need write access on upstream to create branches and push; otherwise ask a maintainer to perform this step.
+**2. Set your Claude token on the fork**
+
+GitHub does not expose upstream secrets to PRs opened from forks. Store your token on **your fork**:
+
+```bash
+export CLAUDE_CODE_OAUTH_TOKEN="sk-ant-oat01-..."
+gh secret set CLAUDE_CODE_OAUTH_TOKEN \
+  --body "$CLAUDE_CODE_OAUTH_TOKEN" \
+  --repo <your-username>/wf-site-analyser-client-app
+```
+
+Or via the UI: **your-fork → Settings → Secrets and variables → Actions → New repository secret**.
+
+**3. Branch, commit, push**
+
+Pre-commit hooks run locally (token governance, plus Fallow only when installed locally). Push to your fork:
+
+```bash
+git checkout -b feature/my-change
+git commit -m "feat: ..."
+git push origin feature/my-change
+```
+
+**4. Open PR to upstream**
+
+```bash
+gh pr create --repo <org>/wf-site-analyser-client-app --base develop --head <your-username>:feature/my-change
+```
+
+**5. What runs where**
+
+| PR type                  | Fallow pre-commit (local) | Upstream CI workflow                          | Claude token used                                                             |
+| ------------------------ | ------------------------- | --------------------------------------------- | ----------------------------------------------------------------------------- |
+| Branch PR (same repo)    | Yes                       | Yes — full review                             | Upstream secret or author's environment                                       |
+| Fork PR → upstream       | Yes (local)               | Yes — but **no fork secrets on upstream run** | Upstream must provide token (repo secret or per-user environment on upstream) |
+| PR within your fork only | Yes                       | Fork workflow + fork secret                   | Your fork secret                                                              |
+
+For fork PRs into upstream, the Claude review step needs a token configured on the **upstream** repository (shared secret or per-user environment for the PR author). Your fork secret does not flow to upstream's workflow.
+
+**Contributor checklist**
+
+- [ ] Fork cloned, `npm install` (Husky hooks active)
+- [ ] `claude setup-token` run locally
+- [ ] Token stored on fork (for fork-only CI) **or** upstream admin created your GitHub Environment
+- [ ] `origin` points to your fork, `upstream` points to org repo
+- [ ] PRs target `develop` on upstream
+
+**Maintainer checklist (upstream)**
+
+- [ ] `CLAUDE_CODE_OAUTH_TOKEN` set as a repo secret **or** per-user GitHub Environments (one per contributor username)
+- [ ] [`anthropics/claude-code-action`](https://github.com/anthropics/claude-code-action) OAuth token secret present before enabling the workflow on fork PRs

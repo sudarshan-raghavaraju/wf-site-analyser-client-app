@@ -166,16 +166,16 @@ The hook runs `.claude/skills/figma-tokens/evals/checks/deterministic.sh` and bl
 
 **Checks enforced:**
 
-| Check | What it catches |
-|---|---|
-| All 5 `tokens/*.json` exist and are valid JSON | Accidental deletion or malformed edits |
-| `tokens.css` has `:root` with `--wf-*` properties | Failed or empty build |
-| `px` units on spacing, border-radius, font-size | Bare-number values that produce invalid CSS |
-| Color values are hex, `rgba()`, or `var()` | `undefined` or raw number values |
-| No `[object Object]` in output | Composite typography objects that Style Dictionary can't serialize |
-| `index.css` imports `tokens.css` first | Missing or reordered import that breaks CSS variable resolution |
-| `npm run build:tokens` exits 0 | Build errors in the Style Dictionary pipeline |
-| TypeScript: no errors in token files | Type regressions in `theme.ts` or `tailwind.config.ts` |
+| Check                                             | What it catches                                                    |
+| ------------------------------------------------- | ------------------------------------------------------------------ |
+| All 5 `tokens/*.json` exist and are valid JSON    | Accidental deletion or malformed edits                             |
+| `tokens.css` has `:root` with `--wf-*` properties | Failed or empty build                                              |
+| `px` units on spacing, border-radius, font-size   | Bare-number values that produce invalid CSS                        |
+| Color values are hex, `rgba()`, or `var()`        | `undefined` or raw number values                                   |
+| No `[object Object]` in output                    | Composite typography objects that Style Dictionary can't serialize |
+| `index.css` imports `tokens.css` first            | Missing or reordered import that breaks CSS variable resolution    |
+| `npm run build:tokens` exits 0                    | Build errors in the Style Dictionary pipeline                      |
+| TypeScript: no errors in token files              | Type regressions in `theme.ts` or `tailwind.config.ts`             |
 
 **Run manually at any time:**
 

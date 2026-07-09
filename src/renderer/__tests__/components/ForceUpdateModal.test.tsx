@@ -1,14 +1,20 @@
 /**
- * SA-201: Force Update Modal
+ * SA-201: Force Update Modal — unit tests
  *
- * Tests that the blocking force-update modal renders correctly, prevents
- * background interaction, drives the Electron update lifecycle via IPC,
- * and auto-saves in-progress work before restarting.
+ * Covers ticket test cases TC-01 through TC-08 against the presentational
+ * ForceUpdateModal component in isolation.
  *
- * Test File: src/renderer/__tests__/components/ForceUpdateModal.test.tsx
+ * TC-05 (Auto-saves before restart — Integration) is not a modal-only concern;
+ * it lives one layer up where VersionChecker calls saveAutoSave() before
+ * installUpdate(). See:
+ *   src/renderer/__tests__/lifecycle/VersionCheckOnLaunch.test.tsx
+ *     → "TC-05-integration: auto-saves before calling installUpdate when install is triggered"
+ *
+ * The "Extra" test below covers the related UI invariant (button disabled while
+ * the install is in flight) so the disabled-state assertion isn't lost.
  */
 
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 
@@ -52,12 +58,9 @@ describe('SA-201 – Force Update Modal', () => {
   it('TC-02: overlay disables pointer-events on background content', () => {
     renderModal();
     const overlay = screen.getByRole('dialog');
-    // The modal overlay should cover the viewport and disable clicks behind it
     expect(overlay).toBeInTheDocument();
-    // Confirm the backdrop has pointer-events-none on the background layer
     const backdrop = overlay.parentElement;
     expect(backdrop).not.toBeNull();
-    // The modal container should have inert or aria-modal
     expect(overlay).toHaveAttribute('aria-modal', 'true');
   });
 
@@ -66,7 +69,6 @@ describe('SA-201 – Force Update Modal', () => {
     renderModal({ currentVersion: '2.3.0', newVersion: '2.4.0' });
     expect(screen.getByText('2.3.0')).toBeInTheDocument();
     expect(screen.getByText('2.4.0')).toBeInTheDocument();
-    // Arrow separator
     expect(
       screen.getByRole('img', { name: /arrow|upgrade/i }) ?? screen.getByText(/→|➜/),
     ).toBeInTheDocument();
@@ -80,21 +82,23 @@ describe('SA-201 – Force Update Modal', () => {
     expect(onInstall).toHaveBeenCalledTimes(1);
   });
 
-  // TC-05: Auto-saves before restart
-  it('TC-05: auto-saves in-progress work before triggering update', async () => {
-    const onInstall = vi.fn(async () => {
-      await window.api['analysis:saveAutoSave']();
-    });
-    renderModal({ onInstall });
-    await userEvent.click(screen.getByRole('button', { name: /restart and update/i }));
-    expect(window.api['analysis:saveAutoSave']).toHaveBeenCalled();
+  // TC-05 (Integration): covered in VersionCheckOnLaunch.test.tsx — see file header.
+
+  // Extra: related UI invariant — CTA disabled while the install is in flight.
+  it('Extra: install button is disabled when status is "installing"', () => {
+    renderModal({ status: 'installing' });
+    expect(screen.getByRole('button', { name: /restart and update/i })).toBeDisabled();
   });
 
   // TC-06: Shows error state with retry
-  it('TC-06: renders error message and retry button when status is "error"', () => {
-    renderModal({ status: 'error', onRetry: vi.fn() });
+  it('TC-06: renders error message and retry button when status is "error"', async () => {
+    const onRetry = vi.fn();
+    renderModal({ status: 'error', onRetry });
     expect(screen.getByText(/failed|error/i)).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /retry/i })).toBeInTheDocument();
+    const retryButton = screen.getByRole('button', { name: /retry/i });
+    expect(retryButton).toBeInTheDocument();
+    await userEvent.click(retryButton);
+    expect(onRetry).toHaveBeenCalledTimes(1);
   });
 
   // TC-07: Cannot be dismissed via Escape
@@ -110,9 +114,9 @@ describe('SA-201 – Force Update Modal', () => {
     expect(screen.getByText(/ready to install/i)).toBeInTheDocument();
   });
 
-  it('TC-08a: status badge shows "Downloading..." during download', () => {
+  it('TC-08a: status badge shows "Downloading... 45%" when downloadProgress is supplied', () => {
     renderModal({ status: 'downloading', downloadProgress: 45 });
-    expect(screen.getByText(/downloading/i)).toBeInTheDocument();
+    expect(screen.getByText(/downloading\.\.\. 45%/i)).toBeInTheDocument();
   });
 
   it('TC-08b: status badge shows "Installing..." during installation', () => {

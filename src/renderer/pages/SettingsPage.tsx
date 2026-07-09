@@ -7,7 +7,10 @@ export function SettingsPage(): React.ReactElement {
   return (
     <div data-testid="settings-page">
       <h1 className="text-xl font-semibold">Settings</h1>
-      <p className="text-neutral-400">Tab: {tab ?? 'general'}</p>
+      <p className="text-neutral-400">
+        Tab:
+        {tab ?? 'general'}
+      </p>
     </div>
   );
 }

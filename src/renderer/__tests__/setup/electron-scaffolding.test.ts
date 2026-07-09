@@ -85,6 +85,7 @@ describe('TC-04: Preload contextBridge exposes typed API', () => {
     'analysis:resume',
     'analysis:getStatus',
     'analysis:saveAutoSave',
+    'analysis:loadAutoSave',
     'data:migrateGuestToAuth',
     'data:discardGuestData',
     'data:getStorageUsage',

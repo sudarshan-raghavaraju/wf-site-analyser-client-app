@@ -4,6 +4,11 @@
       "base": { "value": "'Inter', system-ui, sans-serif", "type": "fontFamily" }
     },
     "size": {
+      "xxs": {
+        "value": "10px",
+        "type": "fontSize",
+        "description": "Micro labels — badge captions, version labels"
+      },
       "xs": { "value": "12px", "type": "fontSize", "description": "Badge labels, status chips" },
       "sm": { "value": "14px", "type": "fontSize", "description": "Body small, card descriptions" },
       "base": { "value": "16px", "type": "fontSize", "description": "Card headings (h4)" },
@@ -18,7 +23,12 @@
         "description": "Section headings (h3/h4), nav app title"
       },
       "2xl": { "value": "36px", "type": "fontSize", "description": "Page heading (h2)" },
-      "3xl": { "value": "48px", "type": "fontSize", "description": "Hero heading (h1/h3 hero)" }
+      "3xl": { "value": "48px", "type": "fontSize", "description": "Hero heading (h1/h3 hero)" },
+      "display": {
+        "value": "30px",
+        "type": "fontSize",
+        "description": "Modal / dialog title (e.g. Update Required)"
+      }
     },
     "weight": {
       "regular": { "value": "400", "type": "fontWeight" },

@@ -27,6 +27,10 @@ check() {
   fi
 }
 
+valid_json() {
+  node -e "JSON.parse(require('fs').readFileSync(process.argv[1], 'utf8'))" "$1"
+}
+
 echo "── Deterministic checks ──────────────────────────────────────"
 
 # ── 1. Token source files ──────────────────────────────────────────
@@ -36,7 +40,7 @@ for f in color typography spacing border-radius shadow; do
 done
 
 for f in color typography spacing border-radius shadow; do
-  check "tokens/$f.json is valid JSON" jq empty "$TOKENS_DIR/$f.json"
+  check "tokens/$f.json is valid JSON" valid_json "$TOKENS_DIR/$f.json"
 done
 
 # ── 2. tokens.css structure ────────────────────────────────────────

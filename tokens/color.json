@@ -81,6 +81,11 @@
     },
     "warning": {
       "default": { "value": "#f59e0b", "type": "color" },
+      "dark": {
+        "value": "#92400e",
+        "type": "color",
+        "description": "Warning dark — readable warning text on light surfaces"
+      },
       "light": { "value": "#f97316", "type": "color" },
       "surface": { "value": "#fff7ed", "type": "color" }
     },

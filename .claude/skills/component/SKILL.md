@@ -9,17 +9,17 @@ Follow the conventions below — they reflect choices already made by the team.
 
 ## File locations
 
-| Kind of code | Location |
-|---|---|
-| Reusable UI primitives | `src/renderer/components/` (e.g. `Button.tsx`, `Modal.tsx`, `Input.tsx`) |
-| Feature screens / area-specific UI | `src/renderer/features/<area>/` |
-| Page-level routes | `src/renderer/pages/` |
-| Hooks | `src/renderer/hooks/` |
-| Zustand stores | `src/renderer/store/` |
-| Shared types (cross-process) | `src/shared/types.ts` |
-| Main process code | `src/main/` |
-| Preload (IPC bridge) | `src/preload/` |
-| Tests | `src/renderer/__tests__/<mirrors-source-path>/` |
+| Kind of code                       | Location                                                                 |
+| ---------------------------------- | ------------------------------------------------------------------------ |
+| Reusable UI primitives             | `src/renderer/components/` (e.g. `Button.tsx`, `Modal.tsx`, `Input.tsx`) |
+| Feature screens / area-specific UI | `src/renderer/features/<area>/`                                          |
+| Page-level routes                  | `src/renderer/pages/`                                                    |
+| Hooks                              | `src/renderer/hooks/`                                                    |
+| Zustand stores                     | `src/renderer/store/`                                                    |
+| Shared types (cross-process)       | `src/shared/types.ts`                                                    |
+| Main process code                  | `src/main/`                                                              |
+| Preload (IPC bridge)               | `src/preload/`                                                           |
+| Tests                              | `src/renderer/__tests__/<mirrors-source-path>/`                          |
 
 ## File & symbol naming
 
@@ -43,20 +43,13 @@ export interface FooProps {
   className?: string;
 }
 
-export function Foo({
-  open,
-  onClose,
-  className = '',
-}: FooProps): React.ReactElement {
-  return (
-    <div className={`base-classes ${className}`}>
-      ...
-    </div>
-  );
+export function Foo({ open, onClose, className = '' }: FooProps): React.ReactElement {
+  return <div className={`base-classes ${className}`}>...</div>;
 }
 ```
 
 ### React imports — what's actually needed
+
 - The project is on **React 19 with the new JSX transform**. `'react/react-in-jsx-scope': 'off'` is set in `eslint.config.js`, so **pure JSX no longer requires `import React from 'react'`**.
 - **Only import `React`** when you reference the `React.*` namespace — e.g. `React.ReactElement`, `React.ReactNode`, `React.memo`, `React.FC`.
 - For hooks and utilities, use named imports: `import { useState, useEffect } from 'react';`.
@@ -75,14 +68,17 @@ export function Foo({
   ```
 
 ### Inline-style exception
+
 Inline `style={}` is acceptable **only** when the value is computed at runtime by a
 third-party library and can't be expressed as a static utility class — e.g. virtualizers
 that compute pixel offsets, drag-and-drop libraries, or canvas/SVG measurement code.
 Comment why. Example:
 
 ```tsx
-{/* @tanstack/react-virtual computes pixel offsets at runtime — these cannot be Tailwind classes */}
-<div style={{ top: virtualRow.start, height: virtualRow.size }} />
+{
+  /* @tanstack/react-virtual computes pixel offsets at runtime — these cannot be Tailwind classes */
+}
+<div style={{ top: virtualRow.start, height: virtualRow.size }} />;
 ```
 
 ## State

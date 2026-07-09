@@ -10,9 +10,7 @@ export function ResultsWorkspacePage(): React.ReactElement {
   return (
     <div data-testid="results-workspace-page">
       <h1 className="text-xl font-semibold">Results Workspace</h1>
-      <p className="text-neutral-400">
-        Project: {projectId} / Analysis: {analysisId}
-      </p>
+      <p className="text-neutral-400">{`Project: ${projectId} / Analysis: ${analysisId}`}</p>
     </div>
   );
 }

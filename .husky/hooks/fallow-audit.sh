@@ -1,8 +1,8 @@
 #!/usr/bin/env sh
 # Fallow audit gate.
 #
-# Runs when source or project config files are staged.
-# Gate: new-only (default) — only issues introduced by your changeset fail.
+# Runs when source or project config files are staged and fallow is installed locally.
+# Gate: local-only; does not download fallow during commit.
 # Base branch: origin/develop (matches .github/workflows/claude-pr-review.yml).
 #
 # Run manually:
@@ -19,8 +19,17 @@ echo ""
 echo "Source files staged — running fallow audit (new-only, base: origin/develop)..."
 echo ""
 
+FALLOW_BIN="$PWD/node_modules/.bin/fallow"
+
+if [ ! -x "$FALLOW_BIN" ]; then
+  echo "fallow audit: local fallow binary not found; skipping local gate."
+  echo "CI still runs fallow audit for PRs."
+  echo ""
+  exit 0
+fi
+
 set +e
-FALLOW_AUDIT_BASE=origin/develop npx fallow@2 audit --quiet
+"$FALLOW_BIN" audit --quiet --base origin/develop
 fallow_exit=$?
 set -e
 

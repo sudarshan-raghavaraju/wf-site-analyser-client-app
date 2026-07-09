@@ -7,7 +7,10 @@ export function AnalysisProgressPage(): React.ReactElement {
   return (
     <div data-testid="analysis-progress-page">
       <h1 className="text-xl font-semibold">Analysis in Progress</h1>
-      <p className="text-neutral-400">ID: {id}</p>
+      <p className="text-neutral-400">
+        ID:
+        {id}
+      </p>
     </div>
   );
 }

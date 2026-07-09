@@ -5,11 +5,13 @@
 ## Linked Issue
 
 <!-- e.g. Closes #12, Fixes SA-106 -->
+
 Closes #
 
 ## Type of Change
 
 <!-- Mark with an "x" all that apply -->
+
 - [ ] Bug fix (non-breaking change which fixes an issue)
 - [ ] New feature (non-breaking change which adds functionality)
 - [ ] Refactor (no functional change)
@@ -20,6 +22,7 @@ Closes #
 ## How Has This Been Tested?
 
 <!-- Describe the tests you ran to verify your changes. -->
+
 - [ ] `npm run typecheck` passes
 - [ ] `npm run lint` passes
 - [ ] `npm run test` passes

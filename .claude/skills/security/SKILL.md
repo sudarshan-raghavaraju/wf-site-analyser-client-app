@@ -9,6 +9,7 @@ You are generating code for an Electron application. Electron has a unique secur
 ## Always do
 
 ### Electron process isolation
+
 - **Never** import the `electron` module directly in renderer code (`src/renderer/**`).
 - **Always** use `window.api.<method>()` in the renderer — methods are defined in `src/preload/index.ts` and bridged via `contextBridge`.
 - IPC handlers in `src/main/ipc/` use `ipcMain.handle()` with channels declared in `src/shared/types.ts` (`IPC_CHANNELS`).
@@ -20,22 +21,26 @@ You are generating code for an Electron application. Electron has a unique secur
   Electron's official security checklist.
 
 ### Type safety
+
 - **Never** use `any`. Use `unknown` and narrow with a type guard (or a Zod schema, which is already installed).
 - All IPC channel inputs and return types must be declared in `src/shared/types.ts` so main, preload, and renderer agree.
 - Use Zod to validate any data crossing a boundary (IPC, network, file).
 
 ### Rendering untrusted content
+
 - **Never** use `dangerouslySetInnerHTML` with user-supplied or remote content.
 - If you must render HTML, sanitize with a library (e.g. DOMPurify). Prefer rendering as text.
 - Don't construct URLs by string concatenation — use `URL` / `URLSearchParams`.
 
 ### Secrets & sensitive data
+
 - Use Electron's `safeStorage` via `window.api['safeStorage:encrypt' | 'safeStorage:decrypt' | 'safeStorage:delete']` for tokens, passwords, API keys.
 - Never log secrets, tokens, or user PII — even in `console.log` during development.
 - Never commit `.env` files — they're gitignored, keep it that way.
 - API base URLs come from `IPC_CHANNELS.GET_ENV` — never hardcode them.
 
 ### External resources
+
 - Pin third-party scripts/stylesheets with Subresource Integrity hashes when fetched from CDN.
 - Use HTTPS for all network calls — no plain HTTP.
 - Validate redirects — don't follow user-supplied URLs blindly.

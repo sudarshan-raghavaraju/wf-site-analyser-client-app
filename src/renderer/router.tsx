@@ -1,6 +1,7 @@
 import React, { Suspense } from 'react';
 import type { RouteObject } from 'react-router-dom';
 import { Navigate } from 'react-router-dom';
+
 import { AuthGuard } from './components/AuthGuard';
 import { LayoutShell } from './components/LayoutShell';
 import { NotFoundPage } from './pages/NotFoundPage';
@@ -53,7 +54,7 @@ function withSuspense(Page: React.ComponentType): React.ReactElement {
 // Route table — shared between createHashRouter (app) and createMemoryRouter (tests)
 export const routes: RouteObject[] = [
   // Standalone screens — no layout shell
-  { path: ROUTES.SIGN_IN,      element: withSuspense(SignInPage) },
+  { path: ROUTES.SIGN_IN, element: withSuspense(SignInPage) },
   { path: ROUTES.FORCE_UPDATE, element: withSuspense(ForceUpdatePage) },
 
   // AuthGuard (stub, activates in Epic 09) wraps the persistent layout shell.
@@ -65,15 +66,18 @@ export const routes: RouteObject[] = [
       {
         element: <LayoutShell />,
         children: [
-          { index: true,                     element: <Navigate to={ROUTES.DASHBOARD} replace /> },
-          { path: ROUTES.DASHBOARD,           element: withSuspense(DashboardPage) },
-          { path: ROUTES.ANALYSIS_NEW,        element: withSuspense(AnalysisSetupPage) },
-          { path: ROUTES.ANALYSIS_PROGRESS,   element: withSuspense(AnalysisProgressPage) },
-          { path: ROUTES.RESULTS,             element: withSuspense(ResultsWorkspacePage) },
-          { path: ROUTES.SETTINGS_ROOT,       element: <Navigate to={`${ROUTES.SETTINGS_ROOT}/general`} replace /> },
-          { path: ROUTES.SETTINGS,            element: withSuspense(SettingsPage) },
-          { path: ROUTES.PROJECTS,            element: withSuspense(ProjectsPage) },
-          { path: ROUTES.HELP,               element: withSuspense(HelpPage) },
+          { index: true, element: <Navigate to={ROUTES.DASHBOARD} replace /> },
+          { path: ROUTES.DASHBOARD, element: withSuspense(DashboardPage) },
+          { path: ROUTES.ANALYSIS_NEW, element: withSuspense(AnalysisSetupPage) },
+          { path: ROUTES.ANALYSIS_PROGRESS, element: withSuspense(AnalysisProgressPage) },
+          { path: ROUTES.RESULTS, element: withSuspense(ResultsWorkspacePage) },
+          {
+            path: ROUTES.SETTINGS_ROOT,
+            element: <Navigate to={`${ROUTES.SETTINGS_ROOT}/general`} replace />,
+          },
+          { path: ROUTES.SETTINGS, element: withSuspense(SettingsPage) },
+          { path: ROUTES.PROJECTS, element: withSuspense(ProjectsPage) },
+          { path: ROUTES.HELP, element: withSuspense(HelpPage) },
         ],
       },
     ],

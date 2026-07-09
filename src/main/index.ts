@@ -1,10 +1,8 @@
 import path from 'path';
 
-// eslint-disable-next-line import/no-extraneous-dependencies
 import { app, BrowserWindow } from 'electron';
 
 import { registerIpcHandlers } from './ipc';
-import { initAutoUpdater } from './services/updater';
 
 let mainWindow: BrowserWindow | null = null;
 
@@ -43,9 +41,17 @@ function createWindow(): void {
   });
 }
 
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
+  if (process.env.NODE_ENV === 'development') {
+    try {
+      const { mockServer } = await import('./mocks/server');
+      mockServer.listen({ onUnhandledRequest: 'bypass' });
+      console.log('[dev] MSW mock server started — update-check requests intercepted.');
+    } catch (err) {
+      console.warn('[dev] MSW failed to start, requests will hit the real network:', err);
+    }
+  }
   createWindow();
-  initAutoUpdater();
 });
 
 app.on('window-all-closed', () => {

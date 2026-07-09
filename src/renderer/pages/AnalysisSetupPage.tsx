@@ -8,7 +8,10 @@ export function AnalysisSetupPage(): React.ReactElement {
   return (
     <div data-testid="analysis-setup-page">
       <h1 className="text-xl font-semibold">New Analysis</h1>
-      <p className="text-neutral-400">Source: {source}</p>
+      <p className="text-neutral-400">
+        Source:
+        {source}
+      </p>
     </div>
   );
 }

@@ -6,14 +6,14 @@ Each skill is a self-contained `SKILL.md` with a YAML frontmatter that tells the
 
 ## Available skills
 
-| Skill | What it covers | Triggered when generating |
-|---|---|---|
-| [`tdd-story`](./tdd-story/SKILL.md) | TDD workflow for implementing a user story | A story ticket (e.g. SA-601) needs implementation |
-| [`a11y`](./a11y/SKILL.md) | WCAG 2.2 accessibility patterns (keyboard, ARIA, contrast) | Any new UI: components, screens, forms, dialogs |
-| [`performance`](./performance/SKILL.md) | React + Electron renderer performance (memoization, lists, INP) | Components with lists, expensive computation, or frequent interactions |
-| [`security`](./security/SKILL.md) | Electron security boundaries, type safety, secrets handling | New IPC handlers, user input handling, secret storage, anything crossing main/preload/renderer |
-| [`component`](./component/SKILL.md) | Project conventions: file location, naming, Tailwind, Radix, forms, state, tests | Any new component, hook, store, or feature |
-| [`error-handling`](./error-handling/SKILL.md) | ErrorBoundary placement, IPC try/catch, Toast vs modal vs inline, safe logging | Code that calls IPC, fetches data, parses input, or surfaces failures to users |
+| Skill                                         | What it covers                                                                   | Triggered when generating                                                                      |
+| --------------------------------------------- | -------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| [`tdd-story`](./tdd-story/SKILL.md)           | TDD workflow for implementing a user story                                       | A story ticket (e.g. SA-601) needs implementation                                              |
+| [`a11y`](./a11y/SKILL.md)                     | WCAG 2.2 accessibility patterns (keyboard, ARIA, contrast)                       | Any new UI: components, screens, forms, dialogs                                                |
+| [`performance`](./performance/SKILL.md)       | React + Electron renderer performance (memoization, lists, INP)                  | Components with lists, expensive computation, or frequent interactions                         |
+| [`security`](./security/SKILL.md)             | Electron security boundaries, type safety, secrets handling                      | New IPC handlers, user input handling, secret storage, anything crossing main/preload/renderer |
+| [`component`](./component/SKILL.md)           | Project conventions: file location, naming, Tailwind, Radix, forms, state, tests | Any new component, hook, store, or feature                                                     |
+| [`error-handling`](./error-handling/SKILL.md) | ErrorBoundary placement, IPC try/catch, Toast vs modal vs inline, safe logging   | Code that calls IPC, fetches data, parses input, or surfaces failures to users                 |
 
 ## How agents use these skills
 

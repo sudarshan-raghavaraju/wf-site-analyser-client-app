@@ -19,56 +19,76 @@
                 "id": "2:1",
                 "name": "Primary/Default",
                 "type": "RECTANGLE",
-                "fills": [{"type": "SOLID", "color": {"r": 0.0098, "g": 0.396, "b": 0.863}, "opacity": 1}],
+                "fills": [
+                  {
+                    "type": "SOLID",
+                    "color": { "r": 0.0098, "g": 0.396, "b": 0.863 },
+                    "opacity": 1
+                  }
+                ],
                 "children": []
               },
               {
                 "id": "2:2",
                 "name": "Neutral/900",
                 "type": "RECTANGLE",
-                "fills": [{"type": "SOLID", "color": {"r": 0.098, "g": 0.110, "b": 0.114}, "opacity": 1}],
+                "fills": [
+                  { "type": "SOLID", "color": { "r": 0.098, "g": 0.11, "b": 0.114 }, "opacity": 1 }
+                ],
                 "children": []
               },
               {
                 "id": "2:3",
                 "name": "Neutral/50",
                 "type": "RECTANGLE",
-                "fills": [{"type": "SOLID", "color": {"r": 0.973, "g": 0.976, "b": 0.980}, "opacity": 1}],
+                "fills": [
+                  { "type": "SOLID", "color": { "r": 0.973, "g": 0.976, "b": 0.98 }, "opacity": 1 }
+                ],
                 "children": []
               },
               {
                 "id": "2:4",
                 "name": "Success/Default",
                 "type": "RECTANGLE",
-                "fills": [{"type": "SOLID", "color": {"r": 0.063, "g": 0.725, "b": 0.506}, "opacity": 1}],
+                "fills": [
+                  { "type": "SOLID", "color": { "r": 0.063, "g": 0.725, "b": 0.506 }, "opacity": 1 }
+                ],
                 "children": []
               },
               {
                 "id": "2:5",
                 "name": "Warning/Default",
                 "type": "RECTANGLE",
-                "fills": [{"type": "SOLID", "color": {"r": 0.961, "g": 0.620, "b": 0.043}, "opacity": 1}],
+                "fills": [
+                  { "type": "SOLID", "color": { "r": 0.961, "g": 0.62, "b": 0.043 }, "opacity": 1 }
+                ],
                 "children": []
               },
               {
                 "id": "2:6",
                 "name": "Error/Default",
                 "type": "RECTANGLE",
-                "fills": [{"type": "SOLID", "color": {"r": 0.729, "g": 0.102, "b": 0.102}, "opacity": 1}],
+                "fills": [
+                  { "type": "SOLID", "color": { "r": 0.729, "g": 0.102, "b": 0.102 }, "opacity": 1 }
+                ],
                 "children": []
               },
               {
                 "id": "2:7",
                 "name": "Info/Default",
                 "type": "RECTANGLE",
-                "fills": [{"type": "SOLID", "color": {"r": 0.055, "g": 0.647, "b": 0.914}, "opacity": 1}],
+                "fills": [
+                  { "type": "SOLID", "color": { "r": 0.055, "g": 0.647, "b": 0.914 }, "opacity": 1 }
+                ],
                 "children": []
               },
               {
                 "id": "2:8",
                 "name": "White/80",
                 "type": "RECTANGLE",
-                "fills": [{"type": "SOLID", "color": {"r": 1.0, "g": 1.0, "b": 1.0}, "opacity": 0.8}],
+                "fills": [
+                  { "type": "SOLID", "color": { "r": 1.0, "g": 1.0, "b": 1.0 }, "opacity": 0.8 }
+                ],
                 "children": []
               }
             ]
@@ -83,7 +103,7 @@
                 "id": "3:1",
                 "name": "Heading/H1",
                 "type": "TEXT",
-                "style": {"fontFamily": "Inter", "fontSize": 48, "fontWeight": 400},
+                "style": { "fontFamily": "Inter", "fontSize": 48, "fontWeight": 400 },
                 "fills": [],
                 "children": []
               },
@@ -91,7 +111,7 @@
                 "id": "3:2",
                 "name": "Heading/H2",
                 "type": "TEXT",
-                "style": {"fontFamily": "Inter", "fontSize": 36, "fontWeight": 400},
+                "style": { "fontFamily": "Inter", "fontSize": 36, "fontWeight": 400 },
                 "fills": [],
                 "children": []
               },
@@ -99,7 +119,7 @@
                 "id": "3:3",
                 "name": "Heading/H3",
                 "type": "TEXT",
-                "style": {"fontFamily": "Inter", "fontSize": 20, "fontWeight": 700},
+                "style": { "fontFamily": "Inter", "fontSize": 20, "fontWeight": 700 },
                 "fills": [],
                 "children": []
               },
@@ -107,7 +127,7 @@
                 "id": "3:4",
                 "name": "Body/Default",
                 "type": "TEXT",
-                "style": {"fontFamily": "Inter", "fontSize": 14, "fontWeight": 400},
+                "style": { "fontFamily": "Inter", "fontSize": 14, "fontWeight": 400 },
                 "fills": [],
                 "children": []
               },
@@ -115,7 +135,7 @@
                 "id": "3:5",
                 "name": "Body/Caption",
                 "type": "TEXT",
-                "style": {"fontFamily": "Inter", "fontSize": 12, "fontWeight": 700},
+                "style": { "fontFamily": "Inter", "fontSize": 12, "fontWeight": 700 },
                 "fills": [],
                 "children": []
               }
@@ -187,8 +207,8 @@
             "effects": [
               {
                 "type": "DROP_SHADOW",
-                "color": {"r": 0, "g": 0, "b": 0, "a": 0.1},
-                "offset": {"x": 0, "y": 10},
+                "color": { "r": 0, "g": 0, "b": 0, "a": 0.1 },
+                "offset": { "x": 0, "y": 10 },
                 "radius": 15,
                 "visible": true
               }
@@ -203,8 +223,8 @@
             "effects": [
               {
                 "type": "DROP_SHADOW",
-                "color": {"r": 0, "g": 0, "b": 0, "a": 0.05},
-                "offset": {"x": 0, "y": 1},
+                "color": { "r": 0, "g": 0, "b": 0, "a": 0.05 },
+                "offset": { "x": 0, "y": 1 },
                 "radius": 2,
                 "visible": true
               }

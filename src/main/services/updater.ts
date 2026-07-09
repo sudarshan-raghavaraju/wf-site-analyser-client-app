@@ -8,9 +8,7 @@
 // The electron-updater package is already declared in dependencies — no install needed.
 
 export function initAutoUpdater(): void {
-  if (process.env.NODE_ENV === 'production') {
-    // TODO(Epic 02): uncomment and implement once publish config is in place.
-    // const { autoUpdater } = await import('electron-updater');
-    // autoUpdater.checkForUpdatesAndNotify();
-  }
+  // TODO(Epic 02): uncomment and implement once publish config is in place.
+  // const { autoUpdater } = await import('electron-updater');
+  // autoUpdater.checkForUpdatesAndNotify();
 }

@@ -37,6 +37,7 @@
   --wf-color-success-light: #22c55e;
   --wf-color-success-surface: #dcfce7;
   --wf-color-warning-default: #f59e0b;
+  --wf-color-warning-dark: #92400e;
   --wf-color-warning-light: #f97316;
   --wf-color-warning-surface: #fff7ed;
   --wf-color-error-default: #ba1a1a;
@@ -56,9 +57,9 @@
   --wf-color-black-20: rgba(0, 0, 0, 0.2);
   --wf-color-black-40: rgba(0, 0, 0, 0.4);
   --wf-color-black-05: rgba(0, 0, 0, 0.05);
-  --wf-shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
-  --wf-shadow-md: 0 10px 15px rgba(0,0,0,0.10);
-  --wf-shadow-lg: 0 25px 50px rgba(0,0,0,0.25);
+  --wf-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --wf-shadow-md: 0 10px 15px rgba(0, 0, 0, 0.1);
+  --wf-shadow-lg: 0 25px 50px rgba(0, 0, 0, 0.25);
   --wf-shadow-blur-backdrop: blur(24px);
   --wf-spacing-0: 0px;
   --wf-spacing-1: 4px;
@@ -76,6 +77,7 @@
   --wf-size-content-max-width: 1152px;
   --wf-size-content-width: 1040px;
   --wf-font-family-base: 'Inter', system-ui, sans-serif;
+  --wf-font-size-xxs: 10px;
   --wf-font-size-xs: 12px;
   --wf-font-size-sm: 14px;
   --wf-font-size-base: 16px;
@@ -83,6 +85,7 @@
   --wf-font-size-xl: 20px;
   --wf-font-size-2xl: 36px;
   --wf-font-size-3xl: 48px;
+  --wf-font-size-display: 30px;
   --wf-font-weight-regular: 400;
   --wf-font-weight-bold: 700;
   --wf-font-weight-black: 900;

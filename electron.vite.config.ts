@@ -9,11 +9,23 @@ export default defineConfig(({ mode }) => {
     main: {
       build: {
         sourcemap: !isProd,
+        rollupOptions: {
+          output: {
+            format: 'cjs',
+            entryFileNames: '[name].cjs',
+          },
+        },
       },
     },
     preload: {
       build: {
         sourcemap: !isProd,
+        rollupOptions: {
+          output: {
+            format: 'cjs',
+            entryFileNames: '[name].js',
+          },
+        },
       },
     },
     renderer: {
